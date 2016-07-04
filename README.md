@@ -1,4 +1,8 @@
-##慕课网 NodeJs、MongoDB 搭建电影站点教程
+##慕课网 NodeJs、MongoDB 教程
+
+###教程地址
+- [node+mongodb 建站攻略(一期)](http://www.imooc.com/learn/75)
+- [node+mongodb 建站攻略(二期)](http://www.imooc.com/view/197?src=sug)
 
 ###技术栈
 - NodeJs
