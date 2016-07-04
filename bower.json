@@ -1,0 +1,24 @@
+{
+  "name": "nodejs-mongodb-movie",
+  "description": "imooc nodejs+mongoDB教程",
+  "main": "app.js",
+  "authors": [
+    "dingshaohua"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "nodejs",
+    "mongoDB"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}

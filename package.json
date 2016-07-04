@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-mongodb-movie",
+  "version": "1.0.0",
+  "description": "imooc nodejs+mongoDB教程",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "mongoDB"
+  ],
+  "author": "dingshaohua",
+  "license": "ISC",
+  "devDependencies": {
+    "bower": "^1.7.9"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "jade": "^1.11.0",
+    "moment": "^2.14.0",
+    "mongoose": "^4.5.3"
+  }
+}
