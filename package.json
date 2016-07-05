@@ -14,7 +14,9 @@
   "author": "dingshaohua",
   "license": "ISC",
   "devDependencies": {
-    "bower": "^1.7.9"
+    "body-parser": "^1.15.2",
+    "bower": "^1.7.9",
+    "lodash": "^4.13.1"
   },
   "dependencies": {
     "express": "^4.14.0",

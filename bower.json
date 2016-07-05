@@ -19,6 +19,8 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "^3.3.6"
+    "bootstrap": "^3.3.6",
+    "lodash": "^4.13.1",
+    "moment": "^2.14.1"
   }
 }

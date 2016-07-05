@@ -9,7 +9,7 @@ var MovieSchema = new mongoose.Schema({
 	summary: String,
 	flash: String,
 	poster: String,
-	year: Number,
+	year: Date,
 	meta: {
 		createAt: {
 			type: Date,

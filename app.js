@@ -1,8 +1,20 @@
 // todo support ES6
 var express = require('express')
 var path = require('path')
+var _ = require('lodash')
 var port = process.env.PORT || 4000
 var app = express()
+
+//https://www.npmjs.com/package/body-parser
+var bodyParser = require('body-parser')
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+var mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost/test')
+var Movie = require('./models/movie')
+
+// locals moment.js
+app.locals.moment = require('moment')
 
 app.set('views', './views/pages')
 app.set('view engine', 'jade')
@@ -13,42 +25,29 @@ console.log('imooc started on prot' + port)
 
 // 路由配置
 app.get('/', function (req, res) {
-  res.render('index', {
-  	title: '电影首页',
-  	movies: [
-  		{
-	  		title: '机械战警',
-	  		_id: 1,
-	  		poster: 'http://t3.baidu.com/it/u=1849898466,2538595181&fm=20'
-	  	},{
-	  		title: '机械战警',
-	  		_id: 2,
-	  		poster: 'http://t3.baidu.com/it/u=1849898466,2538595181&fm=20'
-	  	},{
-	  		title: '机械战警',
-	  		_id: 3,
-	  		poster: 'http://t3.baidu.com/it/u=1849898466,2538595181&fm=20'
-	  	}
-  	]
-  })
+	Movie.fetch(function(err, movies) {
+		if (err) {
+			console.log(err, '错误信息')
+		}
+		res.render('index', {
+			title: '电影首页',
+			movies: movies
+		})
+	})
 })
 
 app.get('/movie/:id', function (req, res) {
-  res.render('detail', {
-  	title: '电影详情页',
-  	movie: {
-  		flash: 'http://player.youku.com/player.php/Type/Folder/Fid/27572371/Ob/1/sid/XNTU2NzEzODky/v.swf',
-  		title: '机械战警',
-  		performer: '乔尔·金纳曼 / 艾比·考尼什 / 加里·奥德曼',
-  		doctor: '何塞·帕迪里亚',
-  		country: '美国',
-  		language: '英语',
-  		year: '2014-02-12',
-  		summary: '2028年，专事军火开发的机器人公司Omni Corp.生产了大量装备精良的机械战警，他们被投入到惩治犯罪等行动中，取得显著的效果。罪犯横行的底特律市，嫉恶如仇、正义感十足的警察亚历克斯·墨菲（乔尔·金纳曼 饰）遭到仇家暗算，身体受到毁灭性破坏。借助于Omni公司天才博士丹尼特·诺顿（加里·奥德曼 ...'
-  	}
-  })
+	var id = req.params.id
+
+	Movie.findById(id, function(err, movie) {
+		res.render('detail', {
+			title: 'imooc ' + movie.title,
+			movie: movie
+		})
+	})
 })
 
+// 表单录入
 app.get('/admin/movie', function (req, res) {
   res.render('admin', {
   	title: '后台管理页',
@@ -66,19 +65,69 @@ app.get('/admin/movie', function (req, res) {
   })
 })
 
+// 表单更新
+app.get('/admin/update/:id', function(req, res) {
+	var id = req.params.id
+	if (id) {
+		Movie.findById(id, function(err, movie) {
+			res.render('admin', {
+				title: 'imooc 后台更新页',
+				movie: movie
+			})
+		})
+	}
+})
+
+// 录入表单提交页面
+app.post('/admin/movie/new', urlencodedParser, function (req, res) {
+	var id = req.body._id
+	var movieObj = req.body
+	var _movie
+	if (id !== 'undefined') {
+		Movie.findById(id, function(err, movie) {
+			if (err) {
+				console.log(err, '错误信息')
+			}
+
+			_movie = _.extend(movie, movieObj)
+			_movie.save(function(err, movie) {
+				if (err) {
+					console.log(err, '错误信息')
+				}
+
+				res.redirect('/movie/' + movie._id)
+			})
+		})
+	} else {
+		_movie = new Movie({
+			title: movieObj.title,
+			doctor: movieObj.doctor,
+			performer: movieObj.performer,
+			country: movieObj.country,
+			language: movieObj.language,
+			poster: movieObj.poster,
+			flash: movieObj.flash,
+			year: movieObj.year,
+			summary: movieObj.summary
+		})
+		_movie.save(function(err, movie) {
+			if (err) {
+				console.log(err, '错误信息')
+			}
+
+			res.redirect('/movie/' + movie._id)
+		})
+	}
+})
+
 app.get('/admin/list', function (req, res) {
-  res.render('list', {
-  	title: '后台管理列表页',
-  	movies: [{
-  		_id: '1',
-  		title: '机械战警',
-  		performer: '乔尔·金纳曼 / 艾比·考尼什 / 加里·奥德曼',
-  		doctor: '何塞·帕迪里亚',
-  		country: '美国',
-  		year: '2014-02-12',
-  		meta: {
-  			createdAt: '2014-02-12'
-  		}
-  	}]
-  })
+	Movie.fetch(function(err, movies) {
+		if (err) {
+			console.log(err, '错误信息')
+		}
+		res.render('list', {
+			title: '后台管理列表页',
+			movies: movies
+		})
+	})
 })
